@@ -1,117 +1,84 @@
-import {
-  Card,
-  Row,
-  Col,
-  CardTitle,
-  CardBody,
-  Button,
-  Form,
-  FormGroup,
-  Label,
-  Input,
-  FormText,
-} from "reactstrap";
+import React, { useState } from 'react';
+import { Storage } from 'aws-amplify';
+import AWS from 'aws-sdk';
 
-const Forms = () => {
+function VideoUpload() {
+  const [selectedFile, setSelectedFile] = useState(null);
+
+  const handleFileChange = (e) => {
+    setSelectedFile(e.target.files[0]);
+  };
+
+  const handleUpload = async () => {
+    if (selectedFile) {
+      try {
+        await Storage.put(selectedFile.name, selectedFile);
+        console.log('Video uploaded successfully.');
+      } catch (error) {
+        console.error('Error uploading video:', error);
+      }
+    }
+  };
+
+  const [fileText, setFileText] = useState('');
+  const [loading, setLoading] = useState(false);
+
+  const handleButtonClick = async () => {
+    setLoading(true);
+    const AWS = require('aws-sdk');
+
+    AWS.config.update({
+      region: process.env.REACT_APP_region, // Replace with your desired region
+      accessKeyId: process.env.REACT_APP_accessKeyId, // Add your access key ID here
+      secretAccessKey: process.env.REACT_APP_secretAccessKey // Add your secret access key here
+    });
+
+    // Replace 'your-s3-bucket-name' and 'your-s3-key' with the actual bucket name and key
+    const bucketName = 'outputtranscribefromvideo';
+    const objectKey = 'VideotoTextjson123.json';
+
+    const s3 = new AWS.S3();
+    const params = {
+      Bucket: bucketName,
+      Key: objectKey
+    };
+
+    try {
+      const data = await s3.getObject(params).promise();
+      const jsonString = data.Body.toString('utf-8')
+      const jsonData = JSON.parse(jsonString);
+      const transcript = jsonData.results.transcripts[0].transcript;
+
+      console.log("transcript ",transcript)
+      setFileText(transcript);
+      console.log("filetext",fileText);
+    } catch (error) {
+      console.error('Error fetching file:', error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // useEffect(() => {
+  //   // Fetch the JSON content when the component loads (optional)
+  //   handleButtonClick();
+  // }, []);
+
   return (
-    <Row>
-      <Col>
-        {/* --------------------------------------------------------------------------------*/}
-        {/* Card-1*/}
-        {/* --------------------------------------------------------------------------------*/}
-        <Card>
-          <CardTitle tag="h6" className="border-bottom p-3 mb-0">
-            <i className="bi bi-bell me-2"> </i>
-            Form Example
-          </CardTitle>
-          <CardBody>
-            <Form>
-              <FormGroup>
-                <Label for="exampleEmail">Email</Label>
-                <Input
-                  id="exampleEmail"
-                  name="email"
-                  placeholder="with a placeholder"
-                  type="email"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="examplePassword">Password</Label>
-                <Input
-                  id="examplePassword"
-                  name="password"
-                  placeholder="password placeholder"
-                  type="password"
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleSelect">Select</Label>
-                <Input id="exampleSelect" name="select" type="select">
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleSelectMulti">Select Multiple</Label>
-                <Input
-                  id="exampleSelectMulti"
-                  multiple
-                  name="selectMulti"
-                  type="select"
-                >
-                  <option>1</option>
-                  <option>2</option>
-                  <option>3</option>
-                  <option>4</option>
-                  <option>5</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleText">Text Area</Label>
-                <Input id="exampleText" name="text" type="textarea" />
-              </FormGroup>
-              <FormGroup>
-                <Label for="exampleFile">File</Label>
-                <Input id="exampleFile" name="file" type="file" />
-                <FormText>
-                  This is some placeholder block-level help text for the above
-                  input. It's a bit lighter and easily wraps to a new line.
-                </FormText>
-              </FormGroup>
-              <FormGroup tag="fieldset">
-                <legend>Radio Buttons</legend>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check className="form-label">
-                    Option one is this and that—be sure to include why it's
-                    great
-                  </Label>
-                </FormGroup>
-                <FormGroup check>
-                  <Input name="radio1" type="radio" />{" "}
-                  <Label check className="form-label">
-                    Option two can be something else and selecting it will
-                    deselect option one
-                  </Label>
-                </FormGroup>
-                <FormGroup check disabled>
-                  <Input disabled name="radio1" type="radio" />{" "}
-                  <Label check>Option three is disabled</Label>
-                </FormGroup>
-              </FormGroup>
-              <FormGroup check className="form-label">
-                <Input type="checkbox" /> <Label check>Check me out</Label>
-              </FormGroup>
-              <Button className="mt-2">Submit</Button>
-            </Form>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
-  );
-};
+    <div>
+      <input type="file" accept="video/*" onChange={handleFileChange} />
+      <button onClick={handleUpload}>Upload Video</button>
+      <br></br>
 
-export default Forms;
+      <button onClick={handleButtonClick} disabled={loading}>
+        Fetch File from S3
+      </button>
+      {loading && <p>Loading...</p>}
+      {fileText && <div>{fileText}</div>}
+
+    </div>
+    
+  );
+}
+
+export default VideoUpload;
