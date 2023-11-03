@@ -1,6 +1,7 @@
 import {Card, CardBody} from "reactstrap";
 import {useState} from 'react'
-import React, { useCallback } from 'react';
+import React, { useCallback, useLayoutEffect } from 'react';
+// import FourEdgeNode from "./nodeType";
 import ReactFlow, {
     MiniMap,
     Controls,
@@ -21,102 +22,196 @@ import 'reactflow/dist/style.css';
 
 import { initialNodes, initialEdges } from "./Nodes_Edges";
 
-
+//elkjs tree
 const ELK = require('elkjs')
 const elk = new ELK()
 
-const useLayoutedElements = () => {
-    const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
-    const defaultOptions = {
-      'elk.algorithm': 'layered',
-      'elk.layered.spacing.nodeNodeBetweenLayers': 100,
-      'elk.spacing.nodeNode': 80,
+const elkOptions = {
+    'elk.algorithm': 'layered',
+    'elk.layered.spacing.nodeNodeBetweenLayers': '100',
+    'elk.spacing.nodeNode': '80',
+};
+
+// const useLayoutedElements = () => {
+//     const { getNodes, setNodes, getEdges, fitView } = useReactFlow();
+//     const defaultOptions = {
+//       'elk.algorithm': 'layered',
+//       'elk.layered.spacing.nodeNodeBetweenLayers': 100,
+//       'elk.spacing.nodeNode': 80,
+//     };
+  
+//     const getLayoutedElements = useCallback((options) => {
+//       const layoutOptions = { ...defaultOptions, ...options };
+//       const graph = {
+//         id: 'root',
+//         layoutOptions: layoutOptions,
+//         children: getNodes(),
+//         edges: getEdges(),
+//       };
+  
+//       elk.layout(graph).then(({ children }) => {
+//         // By mutating the children in-place we saves ourselves from creating a
+//         // needless copy of the nodes array.
+//         children.forEach((node) => {
+//           node.position = { x: node.x, y: node.y };
+//         });
+  
+//         setNodes(children);
+//         window.requestAnimationFrame(() => {
+//           fitView();
+//         });
+//       });
+//     }, []);
+  
+//     return { getLayoutedElements };
+// };
+
+const getLayoutedElements = (nodes, edges, options = {}) => {
+    const isHorizontal = options?.['elk.direction'] === 'RIGHT';
+    const graph = {
+      id: 'root',
+      layoutOptions: options,
+      children: nodes.map((node) => ({
+        ...node,
+        // Adjust the target and source handle positions based on the layout
+        // direction.
+        targetPosition: isHorizontal ? 'left' : 'top',
+        sourcePosition: isHorizontal ? 'right' : 'bottom',
+  
+        // Hardcode a width and height for elk to use when layouting.
+        width: 150,
+        height: 50,
+      })),
+      edges: edges,
     };
   
-    const getLayoutedElements = useCallback((options) => {
-      const layoutOptions = { ...defaultOptions, ...options };
-      const graph = {
-        id: 'root',
-        layoutOptions: layoutOptions,
-        children: getNodes(),
-        edges: getEdges(),
-      };
+    return elk
+      .layout(graph)
+      .then((layoutedGraph) => ({
+        nodes: layoutedGraph.children.map((node) => ({
+          ...node,
+          // React Flow expects a position property on the node instead of `x`
+          // and `y` fields.
+          position: { x: node.x, y: node.y },
+        })),
   
-      elk.layout(graph).then(({ children }) => {
-        // By mutating the children in-place we saves ourselves from creating a
-        // needless copy of the nodes array.
-        children.forEach((node) => {
-          node.position = { x: node.x, y: node.y };
-        });
+        edges: layoutedGraph.edges,
+      }))
+      .catch(console.error);
+  };
+
+// const defaultEdgeOptions = {
+//     type:'step'
+// };
+
+// const nodeTypes = { FourEdgeNode: FourEdgeNode };
+
+// const LayoutFlow = () => {
+//     const [nodes, , onNodesChange] = useNodesState(initialNodes);
+//     const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+//     const { getLayoutedElements } = useLayoutedElements();
+
+//     return (
+//         <div style={{ width: '100%', height: '100vh', border: '1px solid #000' }}>
+//             <ReactFlow
+//             nodes={nodes}
+//             edges={edges}
+//             onNodesChange={onNodesChange}
+//             onEdgesChange={onEdgesChange}
+//             // nodeTypes={nodeTypes}
+//             fitView
+//             >
+//                 <Controls />
+//                 <Panel position="top-right">
+//                     <button
+//                     onClick={() =>
+//                         getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
+//                     }
+//                     >
+//                     vertical layout
+//                     </button>
+//                     <button
+//                     onClick={() =>
+//                         getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+//                     }
+//                     >
+//                     horizontal layout
+//                     </button>
+//                     <button
+//                     onClick={() =>
+//                         getLayoutedElements({
+//                         'elk.algorithm': 'org.eclipse.elk.radial',
+//                         })
+//                     }
+//                     >
+//                     radial layout
+//                     </button>
+//                     <button
+//                     onClick={() =>
+//                         getLayoutedElements({
+//                         'elk.algorithm': 'org.eclipse.elk.force',
+//                         })
+//                     }
+//                     >
+//                     force layout
+//                     </button>
+//                 </Panel>
+//             </ReactFlow>
+//         </div>
+//       );
+// }
+
+function LayoutFlow() {
+    const [nodes, setNodes, onNodesChange] = useNodesState([]);
+    const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+    const { fitView } = useReactFlow();
   
-        setNodes(children);
-        window.requestAnimationFrame(() => {
-          fitView();
+    const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
+    const onLayout = useCallback(
+      ({ direction, useInitialNodes = false }) => {
+        const opts = { 'elk.direction': direction, ...elkOptions };
+        const ns = useInitialNodes ? initialNodes : nodes;
+        const es = useInitialNodes ? initialEdges : edges;
+  
+        getLayoutedElements(ns, es, opts).then(({ nodes: layoutedNodes, edges: layoutedEdges }) => {
+          setNodes(layoutedNodes);
+          setEdges(layoutedEdges);
+  
+          window.requestAnimationFrame(() => fitView());
         });
-      });
+      },
+      [nodes, edges]
+    );
+  
+    // Calculate the initial layout on mount.
+    useLayoutEffect(() => {
+      onLayout({ direction: 'DOWN', useInitialNodes: true });
     }, []);
+
+    const nodeOrigin=[0.5,0.5];
   
-    return { getLayoutedElements };
-};
-
-const defaultEdgeOptions = {
-    type:'step'
-};
-
-const nodeOrigin=[0.5,0.5];
-
-const LayoutFlow = () => {
-    const [nodes, , onNodesChange] = useNodesState(initialNodes);
-    const [edges, , onEdgesChange] = useEdgesState(initialEdges);
-    const { getLayoutedElements } = useLayoutedElements();
-
     return (
         <div style={{ width: '100%', height: '100vh', border: '1px solid #000' }}>
             <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            fitView
-            >
-            <Panel position="top-right">
-                <button
-                onClick={() =>
-                    getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
-                }
+                nodes={nodes}
+                edges={edges}
+                onConnect={onConnect}
+                onNodesChange={onNodesChange}
+                onEdgesChange={onEdgesChange}
+                nodeOrigin={nodeOrigin}
+                fitView
                 >
-                vertical layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
-                }
-                >
-                horizontal layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({
-                    'elk.algorithm': 'org.eclipse.elk.radial',
-                    })
-                }
-                >
-                radial layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({
-                    'elk.algorithm': 'org.eclipse.elk.force',
-                    })
-                }
-                >
-                force layout
-                </button>
-            </Panel>
+                <Controls />
+                <Panel position="top-right">
+                    <button onClick={() => onLayout({ direction: 'DOWN' })}>vertical layout</button>
+
+                    <button onClick={() => onLayout({ direction: 'RIGHT' })}>horizontal layout</button>
+                </Panel>
             </ReactFlow>
         </div>
-      );
+    );
 }
+
 
 export default function () {
     return (
