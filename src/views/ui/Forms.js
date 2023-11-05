@@ -123,21 +123,36 @@ function VideoUpload() {
 
   return (
     <div>
-      <input type="file" accept="video/*" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload Video</button>
-      <br></br>
+      <div>
+        <input type="file" accept="video/*" onChange={handleFileChange} />
+        <button onClick={handleUpload}>Upload Video</button>
+        <br></br>
 
-      <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
-        Fetch File from S3
-      </button>
+        <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
+          Fetch File from S3
+        </button>
+      </div>
       {/* {console.log(loadingTranscribe || loadingSummarized)} */}
       {loadingTranscribe && <p> loadingTranscribe...</p>}
       {loadingSummarized && <p> loadingSummarized...</p>}
-      {fileText && <div> 
-        {fileText} </div>}
+      {fileText && 
+      <div className = "mt-3">
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="d-grid gap-3">
+                <div>
+                    <h5>Transcript:</h5>
+                    {fileText}
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div> }
 
       {summarizedText !== "" ?
-      <div className='mt-3'>
+      <div>
         <Row>
           <Col lg="12">
             <Card>

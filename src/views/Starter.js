@@ -48,12 +48,6 @@ const BlogData = [
 const Starter = () => {
   return (
     <div>
-      {/* input for openai */}
-      <Row>
-        <Col lg="12">
-          {/* <InputCard /> */}
-        </Col>
-      </Row>
       {/* Generate MindMap */}
       <Row>
         <Col lg="12">
