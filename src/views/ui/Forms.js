@@ -166,7 +166,6 @@ function VideoUpload() {
         <input type="file" accept="video/*" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Video</button>
         <br></br>
-
         <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
           Fetch File from S3
         </button>
@@ -181,16 +180,35 @@ function VideoUpload() {
             <Card>
               <CardBody className="d-grid gap-3">
                 <div>
-                  <h5>Transcript:</h5>
-                  {fileText}
-                  <p></p>
-                  <div id='filetimeText'></div>
+                    <h5>Transcript:</h5>
+                    {fileText}
+                    
                 </div>
               </CardBody>
             </Card>
           </Col>
         </Row>
-      </div> }
+      </div> 
+      
+      }
+
+      {/* display timestamp */}
+
+      <div>
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="d-grid gap-3">
+                <div id='filetimeText'></div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+
+      
+
+      
 
       {summarizedText !== "" ?
       <div>
