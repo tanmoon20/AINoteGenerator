@@ -6,6 +6,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
+import { Amplify } from "aws-amplify";
+import config from "./aws-exports";
+
+Amplify.configure(config);
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
