@@ -6,14 +6,14 @@ $font-family-sans-serif: "Nunito", sans-serif;
 /*******************/
 // Theme Colors
 /********************/
-$primary: #2962ff;
-$info: #3699ff;
+$primary: #0b0c10;
+$info: #66FCF1;
 $danger: #f64e60;
 $success: #0bb7af;
 $warning: #ee9d01;
-$dark: #343a40;
-$light: #eaf2fb;
-$secondary: #35363b;
+$dark: #1F2833;
+$light: #66FCF1;
+$secondary: #45A29E;
 
 $theme-colors: (
   "primary": $primary,
@@ -33,7 +33,7 @@ $theme-colors: (
 // scss-docs-start gray-color-variables
 $white: #fff !default;
 $gray-100: #f8f9fa !default;
-$gray-200: #eef5f9 !default;
+$gray-200: #1F2833 !default;
 $gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
 $gray-500: #adb5bd !default;
