@@ -5,6 +5,7 @@ import OpenAI from "openai";
 
 const API_KEY = "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"; //secure -> env variable
 
+
 const InputCard = () => {
     const[text, setText] = useState("");
     const[summarizedText, setSummarizedText] = useState("")
