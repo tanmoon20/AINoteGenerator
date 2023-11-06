@@ -6,11 +6,10 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { HashRouter } from "react-router-dom";
 import Loader from "./layouts/loader/Loader";
-import { Amplify } from "aws-amplify";
-import config from "./aws-exports";
+import {Amplify} from 'aws-amplify';
+import awsconfig from './aws-exports'; // Import your existing aws-exports.js file
 
-Amplify.configure(config);
-
+Amplify.configure(awsconfig);
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
