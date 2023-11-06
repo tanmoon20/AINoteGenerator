@@ -21,6 +21,7 @@ function VideoUpload() {
   };
 
   const [fileText, setFileText] = useState('');
+  let filetimeText = '';
   const [loading, setLoading] = useState(false);
 
   const handleButtonClick = async () => {
@@ -48,16 +49,54 @@ function VideoUpload() {
       const jsonString = data.Body.toString('utf-8')
       const jsonData = JSON.parse(jsonString);
       const transcript = jsonData.results.transcripts[0].transcript;
+      
+      //const items = jsonData.results.items[1].start_time;
+      const items = jsonData.results.items;
+      let timestamp='';
+      let sentence='';
+      let timestampSentence='Timestamp<br>';
 
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const startTime = parseFloat(item.start_time);
+        const endTime = parseFloat(item.end_time);
+        const content = item.alternatives[0].content;
+
+        console.log(`Start Time: ${startTime}`);
+        console.log(`End Time: ${endTime}`);
+        //console.log(`Content: ${content}`);
+        if (i==0){
+          timestamp+=startTime;
+        }
+        sentence+=content+' ';
+
+        // Check if this item is the start of a new sentence 
+        if (content == ".") {
+          timestamp+=' - ';
+          const endTime = parseFloat(items[i-1].end_time);
+          timestamp+=endTime;
+          timestampSentence=timestampSentence+timestamp+' '+sentence+'<br>';
+          sentence='';
+          if (i != items.length-1){
+            const startTime = parseFloat(items[i+1].start_time);
+            timestamp=startTime;
+          }
+
+        } 
+      }
+      console.log("timestampSentence: ",timestampSentence)
       console.log("transcript ",transcript)
       setFileText(transcript);
-      console.log("filetext",fileText);
+      filetimeText=timestampSentence;
+      document.getElementById('filetimeText').innerHTML=filetimeText;
+
     } catch (error) {
       console.error('Error fetching file:', error);
     } finally {
       setLoading(false);
     }
   };
+
 
   // useEffect(() => {
   //   // Fetch the JSON content when the component loads (optional)
@@ -75,6 +114,8 @@ function VideoUpload() {
       </button>
       {loading && <p>Loading...</p>}
       {fileText && <div>{fileText}</div>}
+      <p></p>
+      <div id='filetimeText'></div>
 
     </div>
     
