@@ -1,4 +1,5 @@
 import { Col, Row } from "reactstrap";
+import MindMap from "../openai_js/MindMap"
 import SalesChart from "../components/dashboard/SalesChart";
 import Feeds from "../components/dashboard/Feeds";
 import ProjectTables from "../components/dashboard/ProjectTable";
@@ -47,6 +48,12 @@ const BlogData = [
 const Starter = () => {
   return (
     <div>
+      {/* Generate MindMap */}
+      <Row>
+        <Col lg="12">
+          <MindMap />
+        </Col>
+      </Row>      
       {/***Top Cards***/}
       <Row>
         <Col sm="6" lg="3">
