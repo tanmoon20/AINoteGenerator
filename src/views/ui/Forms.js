@@ -1,6 +1,10 @@
 import React, { useState } from 'react';
 import { Storage } from 'aws-amplify';
 import AWS from 'aws-sdk';
+import { Col, Row } from "reactstrap";
+import {Card, CardBody} from "reactstrap";
+
+const API_KEY = "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"; //secure -> env variable
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -22,10 +26,11 @@ function VideoUpload() {
 
   const [fileText, setFileText] = useState('');
   let filetimeText = '';
-  const [loading, setLoading] = useState(false);
+  const [loadingTranscribe, setLoadingTranscribe] = useState(false);
+  const [loadingSummarized, setLoadingSummarized] = useState(false);
 
   const handleButtonClick = async () => {
-    setLoading(true);
+    setLoadingTranscribe(true);
     const AWS = require('aws-sdk');
 
     AWS.config.update({
@@ -90,10 +95,11 @@ function VideoUpload() {
       filetimeText=timestampSentence;
       document.getElementById('filetimeText').innerHTML=filetimeText;
 
+      callOpenAIAPI(transcript);
     } catch (error) {
       console.error('Error fetching file:', error);
-    } finally {
-      setLoading(false);
+    }finally{
+      setLoadingTranscribe(false);
     }
   };
 
@@ -103,22 +109,106 @@ function VideoUpload() {
   //   handleButtonClick();
   // }, []);
 
+  // call openai api
+  const[summarizedText, setSummarizedText] = useState("")
+
+  async function callOpenAIAPI(text){
+    setLoadingSummarized(true);
+    console.log("call open ai api");
+    if(text == "")
+    {
+      console.log("empty text");
+    }
+    else
+    {
+      console.log("Calling the OpenAIAPI");
+
+      const APIBody = {
+          "model": "gpt-3.5-turbo",
+          "messages": [
+              {role: "user", content: "Summarize content you are provided with" + text}
+              // {role: "user", content: "Create a mindmap you are provided with in bullet point outline." + text}
+          ],
+          "temperature": 0,
+          "max_tokens": 1024,
+          "top_p":1.0,
+          "frequency_penalty":0.0,
+          "presence_penalty":0.0
+      }
+      
+      try{  
+        // await fetch("https://api.openai.com/v1/chat/completions", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type":"application/json",
+        //         "Authorization":"Bearer "+ API_KEY
+        //     },
+        //     body: JSON.stringify(APIBody)
+        // }).then((data) => {
+        //     return data.json();
+        // }).then((data) => {
+        //     console.log(data);
+        //     setSummarizedText(data.choices[0].message.content);
+        // });
+        setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoadingSummarized(false);
+      }
+    }
+  }
+
+
   return (
     <div>
-      <input type="file" accept="video/*" onChange={handleFileChange} />
-      <button onClick={handleUpload}>Upload Video</button>
-      <br></br>
+      <div>
+        <input type="file" accept="video/*" onChange={handleFileChange} />
+        <button onClick={handleUpload}>Upload Video</button>
+        <br></br>
 
-      <button onClick={handleButtonClick} disabled={loading}>
-        Fetch File from S3
-      </button>
-      {loading && <p>Loading...</p>}
-      {fileText && <div>{fileText}</div>}
-      <p></p>
-      <div id='filetimeText'></div>
+        <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
+          Fetch File from S3
+        </button>
+      </div>
+      {/* {console.log(loadingTranscribe || loadingSummarized)} */}
+      {loadingTranscribe && <p> loadingTranscribe...</p>}
+      {loadingSummarized && <p> loadingSummarized...</p>}
+      {fileText && 
+      <div className = "mt-3">
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="d-grid gap-3">
+                <div>
+                  <h5>Transcript:</h5>
+                  {fileText}
+                  <p></p>
+                  <div id='filetimeText'></div>
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div> }
 
+      {summarizedText !== "" ?
+      <div>
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="d-grid gap-3">
+                <div>
+                    <h5>Summarized Text:</h5> 
+                    {summarizedText} 
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+       : null}
     </div>
-    
   );
 }
 
