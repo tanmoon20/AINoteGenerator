@@ -25,6 +25,7 @@ function VideoUpload() {
   };
 
   const [fileText, setFileText] = useState('');
+  let filetimeText = '';
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
 
@@ -53,10 +54,47 @@ function VideoUpload() {
       const jsonString = data.Body.toString('utf-8')
       const jsonData = JSON.parse(jsonString);
       const transcript = jsonData.results.transcripts[0].transcript;
+      
+      //const items = jsonData.results.items[1].start_time;
+      const items = jsonData.results.items;
+      let timestamp='';
+      let sentence='';
+      let timestampSentence='Timestamp<br>';
 
+      for (let i = 0; i < items.length; i++) {
+        const item = items[i];
+        const startTime = parseFloat(item.start_time);
+        const endTime = parseFloat(item.end_time);
+        const content = item.alternatives[0].content;
+
+        console.log(`Start Time: ${startTime}`);
+        console.log(`End Time: ${endTime}`);
+        //console.log(`Content: ${content}`);
+        if (i==0){
+          timestamp+=startTime;
+        }
+        sentence+=content+' ';
+
+        // Check if this item is the start of a new sentence 
+        if (content == ".") {
+          timestamp+=' - ';
+          const endTime = parseFloat(items[i-1].end_time);
+          timestamp+=endTime;
+          timestampSentence=timestampSentence+timestamp+' '+sentence+'<br>';
+          sentence='';
+          if (i != items.length-1){
+            const startTime = parseFloat(items[i+1].start_time);
+            timestamp=startTime;
+          }
+
+        } 
+      }
+      console.log("timestampSentence: ",timestampSentence)
       console.log("transcript ",transcript)
       setFileText(transcript);
-      console.log("filetext",fileText);
+      filetimeText=timestampSentence;
+      document.getElementById('filetimeText').innerHTML=filetimeText;
+
       callOpenAIAPI(transcript);
     } catch (error) {
       console.error('Error fetching file:', error);
@@ -64,6 +102,7 @@ function VideoUpload() {
       setLoadingTranscribe(false);
     }
   };
+
 
   // useEffect(() => {
   //   // Fetch the JSON content when the component loads (optional)
@@ -127,7 +166,6 @@ function VideoUpload() {
         <input type="file" accept="video/*" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Video</button>
         <br></br>
-
         <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
           Fetch File from S3
         </button>
@@ -144,12 +182,33 @@ function VideoUpload() {
                 <div>
                     <h5>Transcript:</h5>
                     {fileText}
+                    
                 </div>
               </CardBody>
             </Card>
           </Col>
         </Row>
-      </div> }
+      </div> 
+      
+      }
+
+      {/* display timestamp */}
+
+      <div>
+        <Row>
+          <Col lg="12">
+            <Card>
+              <CardBody className="d-grid gap-3">
+                <div id='filetimeText'></div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </div>
+
+      
+
+      
 
       {summarizedText !== "" ?
       <div>

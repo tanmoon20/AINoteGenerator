@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useContext, useEffect} from "react";
 import { Link } from "react-router-dom";
 import {
   Navbar,
@@ -10,13 +10,33 @@ import {
   DropdownToggle,
   DropdownMenu,
   DropdownItem,
-  Dropdown,
   Button,
 } from "reactstrap";
+import { Button as AwsButton} from "@aws-amplify/ui-react";
 import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
-import user1 from "../assets/images/users/user1.jpg";
+import { Auth } from "aws-amplify";
+import { MyContext } from './UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Header = () => {
+
+  const { user, setUser } = useContext(MyContext);
+  const navigate = useNavigate();
+
+  // rerender the header on signin or signout
+  useEffect(() => {}, [user]);
+
+  // sign out function
+  const handleSignOut = async () => {
+    try {
+      await Auth.signOut();
+      setUser(null);
+      navigate('/starter');
+    } catch (error) {
+      console.log('Error signing out: ', error);
+    }
+  };
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
 
@@ -57,7 +77,39 @@ const Header = () => {
       </div>
 
       <Collapse navbar isOpen={isOpen}>
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
+        {user !== null && <AwsButton onClick={handleSignOut}>SignOut</AwsButton> }
+        <Nav className="me-auto" navbar>
+          {user === null && 
+            <NavItem>
+                <Link to="/login" className="nav-link">
+                  Login
+                </Link>
+            </NavItem>}
+          
+          <NavItem>
+            <Link to="/starter" className="nav-link">
+              Starter
+            </Link>
+          </NavItem>
+          <NavItem>
+            <Link to="/about" className="nav-link">
+              About
+            </Link>
+          </NavItem>
+          <UncontrolledDropdown inNavbar nav>
+            <DropdownToggle caret nav>
+              DD Menu
+            </DropdownToggle>
+            <DropdownMenu end>
+              <DropdownItem>Option 1</DropdownItem>
+              <DropdownItem>Option 2</DropdownItem>
+              <DropdownItem divider />
+              <DropdownItem>Reset</DropdownItem>
+            </DropdownMenu>
+          </UncontrolledDropdown>
+        </Nav>
+
+        {/* <Dropdown isOpen={dropdownOpen} toggle={toggle}>
           <DropdownToggle color="primary">
             <img
               src={user1}
@@ -71,11 +123,12 @@ const Header = () => {
             <DropdownItem>My Account</DropdownItem>
             <DropdownItem>Edit Profile</DropdownItem>
             <DropdownItem divider />
-            <DropdownItem>dashboard</DropdownItem>
-            <DropdownItem>from</DropdownItem>
+            <DropdownItem>My Balance</DropdownItem>
+            <DropdownItem>Inbox</DropdownItem>
             <DropdownItem>Logout</DropdownItem>
           </DropdownMenu>
-        </Dropdown>
+        </Dropdown> */}
+
       </Collapse>
     </Navbar>
   );
