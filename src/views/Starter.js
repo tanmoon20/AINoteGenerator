@@ -1,6 +1,6 @@
 import { Col, Row } from "reactstrap";
 import InputCard from "../openai_js/input"
-import MindMap from "../openai_js/MindMap";
+import MindMap from "../openai_js/mindmap";
 import SalesChart from "../components/dashboard/SalesChart";
 import Feeds from "../components/dashboard/Feeds";
 import ProjectTables from "../components/dashboard/ProjectTable";
