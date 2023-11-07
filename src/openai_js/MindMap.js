@@ -19,7 +19,6 @@ import ReactFlow, {
  
 import 'reactflow/dist/style.css';
 
-const position = { x: 0, y: 0 };
 const initialNodes = [];
 const initialEdges = [];
 
@@ -103,8 +102,6 @@ function LayoutFlow() {
               nodes={nodes}
               edges={edges}
               onConnect={onConnect}
-              onNodesChange={onNodesChange}
-              onEdgesChange={onEdgesChange}
               nodeOrigin={nodeOrigin}
               fitView
               >
@@ -120,12 +117,21 @@ function LayoutFlow() {
   );
 }
 
-function AddNodes(tempId, tempLabel){
+function getDarkColor() {
+  var color = '#';
+  for (var i = 0; i < 6; i++) {
+      color += Math.floor(Math.random() * 10);
+  }
+  return color;
+}
+
+function AddNodes(tempId, tempLabel, nodeColor){
   const nextNode = [
     {
-        id: tempId,
-        data: { label: tempLabel },
-        position: { x: 0, y: 0 },
+      id: tempId,
+      data: { label: tempLabel },
+      position: { x: 0, y: 0 },
+      style: { backgroundColor: nodeColor, color: 'white' },
     },
   ]
   
@@ -139,7 +145,7 @@ function AddEdges(tempId, tempSource, tempTarget ){
     
   const nextEdge = [
       {
-          id: tempId, source: tempSource, target: tempTarget, type: 'step' 
+          id: tempId, source: tempSource, target: tempTarget, type: 'default' 
       }
   ]
 
@@ -151,10 +157,15 @@ function AddEdges(tempId, tempSource, tempTarget ){
 export default function () {
 
   function MindMap(){
-    const input = "Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus";
-    
-    let bulletPos; //first occurence of "-"
+    //store the node color of each hierarchy
+    const [nodeColor,setNodeColor] = useState([]);
+    // const input = "Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus";
+    const input = "- World War II\n  - Causes\n    - Treaty of Versailles\n    - Expansionist Policies (Germany, Japan, Italy)\n    - Political Instability\n  - Major Allied Powers\n    - United States\n    - United Kingdom\n    - Soviet Union\n    - France\n  - Major Axis Powers\n    - Germany\n    - Japan\n    - Italy\n  - Key Events\n    - Invasion of Poland (1939)\n    - Battle of Stalingrad (1942-1943)\n    - D-Day (1944)\n    - Atomic Bombings of Hiroshima and Nagasaki (1945)\n  - Holocaust\n    - Nazi Genocide\n    - Concentration Camps\n    - Millions of Lives Lost\n  - Consequences\n    - Formation of the United Nations\n    - Division of Germany\n    - Beginning of the Cold War\n    - Global Impact\n  - End of War\n    - Surrender of Axis Powers (1945)\n    - Signing of Peace Treaties\n    - Nuremberg Trials";
+
+    let bulletPos; 
     let text;
+
+    console.log("nodeColor: ", nodeColor.at(0));
 
     const wordList = input.split("\n");
     wordList.forEach((word,index)=>{
@@ -163,7 +174,13 @@ export default function () {
       if(bulletPos !== -1){
         text = word.substring(bulletPos+2)
         let nodeId = bulletPos + "h" + index
-        AddNodes(nodeId,text)
+
+        if(nodeColor.at(bulletPos/2) == null)
+        {
+          setNodeColor(nodeColor.push(getDarkColor()));
+        }
+
+        AddNodes(nodeId,text,nodeColor.at(bulletPos/2))
 
         //add edge according to hierarchy
         //only word that is not the highest in hierarchy, connect edge to its parent
