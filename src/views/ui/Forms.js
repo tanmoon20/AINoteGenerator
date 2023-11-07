@@ -3,8 +3,9 @@ import { Storage } from 'aws-amplify';
 import AWS from 'aws-sdk';
 import { Col, Row } from "reactstrap";
 import {Card, CardBody} from "reactstrap";
+import MindMap from '../../openai_js/MindMap';
 
-const API_KEY = "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"; //secure -> env variable
+const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; //secure -> env variable
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -28,15 +29,17 @@ function VideoUpload() {
   let filetimeText = '';
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
+  const [loadingMindMap, setLoadingMindMap] = useState(false);
 
   const handleButtonClick = async () => {
     setLoadingTranscribe(true);
     const AWS = require('aws-sdk');
 
+    console.log(process.env.REACT_APP_region)
     AWS.config.update({
-      region: 'us-east-1', // Replace with your desired region
-      accessKeyId: 'AKIASVSPLFEQ4QUUEV4X', // Add your access key ID here
-      secretAccessKey: 'pX03Z3399rsbU9QzUaBVuadSimqDz0lQhLFnfqej' // Add your secret access key here
+      region: process.env.REACT_APP_region, // Replace with your desired region
+      accessKeyId: process.env.REACT_APP_accessKeyId, // Add your access key ID here
+      secretAccessKey: process.env.REACT_APP_secretAccessKey // Add your secret access key here
     });
 
     // Replace 'your-s3-bucket-name' and 'your-s3-key' with the actual bucket name and key
@@ -59,7 +62,12 @@ function VideoUpload() {
       const items = jsonData.results.items;
       let timestamp='';
       let sentence='';
-      let timestampSentence='Timestamp<br>';
+      let beginningLayout = '<div class="row "><div class ="col-lg-12"><div class = "card"><div class="d-grid gap-3 card-body ">'
+      let beginningTable = '<table class="table table-borderless table-sm table-responsive"><tbody>'
+      let endTable = '</tbody></table>'
+      let endLayout = '</div></div></div></div>'
+      let timestampSentence='<h5>Timestamp:</h5>';
+      timestampSentence = timestampSentence + beginningTable
 
       for (let i = 0; i < items.length; i++) {
         const item = items[i];
@@ -80,7 +88,9 @@ function VideoUpload() {
           timestamp+=' - ';
           const endTime = parseFloat(items[i-1].end_time);
           timestamp+=endTime;
-          timestampSentence=timestampSentence+timestamp+' '+sentence+'<br>';
+          timestamp = '<td style="width: 15%">'+timestamp+"</td>"
+          sentence = "<td>"+sentence+"</td>"
+          timestampSentence=timestampSentence+"<tr>"+timestamp+sentence+"</tr>";
           sentence='';
           if (i != items.length-1){
             const startTime = parseFloat(items[i+1].start_time);
@@ -89,13 +99,16 @@ function VideoUpload() {
 
         } 
       }
+      timestampSentence = timestampSentence + endTable
       console.log("timestampSentence: ",timestampSentence)
       console.log("transcript ",transcript)
       setFileText(transcript);
       filetimeText=timestampSentence;
+      filetimeText = beginningLayout + filetimeText + endLayout;
       document.getElementById('filetimeText').innerHTML=filetimeText;
 
-      callOpenAIAPI(transcript);
+      callOpenAIAPISummarize(transcript);
+      callOpenAIAPIMindMap(transcript);
     } catch (error) {
       console.error('Error fetching file:', error);
     }finally{
@@ -111,13 +124,14 @@ function VideoUpload() {
 
   // call openai api
   const[summarizedText, setSummarizedText] = useState("")
+  const[mindMapText, setMindMapText] = useState("")
 
-  async function callOpenAIAPI(text){
+  async function callOpenAIAPISummarize(text){
     setLoadingSummarized(true);
-    console.log("call open ai api");
+    console.log("call open ai api summarized");
     if(text == "")
     {
-      console.log("empty text");
+      console.log("empty text summarized");
     }
     else
     {
@@ -159,6 +173,53 @@ function VideoUpload() {
     }
   }
 
+  async function callOpenAIAPIMindMap(text){
+    setLoadingMindMap(true);
+    console.log("call open ai api mindmap");
+    if(text == "")
+    {
+      console.log("empty text mindmap");
+    }
+    else
+    {
+      console.log("Calling the OpenAIAPI");
+
+      const APIBody = {
+          "model": "gpt-3.5-turbo",
+          "messages": [
+              {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph." + text}
+          ],
+          "temperature": 0,
+          "max_tokens": 1024,
+          "top_p":1.0,
+          "frequency_penalty":0.0,
+          "presence_penalty":0.0
+      }
+      
+      try{  
+        // await fetch("https://api.openai.com/v1/chat/completions", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type":"application/json",
+        //         "Authorization":"Bearer "+ API_KEY
+        //     },
+        //     body: JSON.stringify(APIBody)
+        // }).then((data) => {
+        //     return data.json();
+        // }).then((data) => {
+        //     console.log(data);
+        //     setMindMapText(data.choices[0].message.content);
+        // });
+        setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoadingMindMap(false);
+      }
+    }
+  }
+
+
 
   return (
     <div>
@@ -166,13 +227,13 @@ function VideoUpload() {
         <input type="file" accept="video/*" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Video</button>
         <br></br>
-        <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
+        <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized || loadingMindMap}>
           Fetch File from S3
         </button>
       </div>
-      {/* {console.log(loadingTranscribe || loadingSummarized)} */}
       {loadingTranscribe && <p> loadingTranscribe...</p>}
       {loadingSummarized && <p> loadingSummarized...</p>}
+      {loadingMindMap && <p> loadingMindMap...</p>}
       {fileText && 
       <div className = "mt-3">
         <Row>
@@ -193,22 +254,7 @@ function VideoUpload() {
       }
 
       {/* display timestamp */}
-
-      <div>
-        <Row>
-          <Col lg="12">
-            <Card>
-              <CardBody className="d-grid gap-3">
-                <div id='filetimeText'></div>
-              </CardBody>
-            </Card>
-          </Col>
-        </Row>
-      </div>
-
-      
-
-      
+      <div id='filetimeText'></div>
 
       {summarizedText !== "" ?
       <div>
@@ -226,7 +272,16 @@ function VideoUpload() {
         </Row>
       </div>
        : null}
+      
+      {/* Generate MindMap */}
+      {mindMapText &&
+        <div>
+          <MindMap fileText={mindMapText}/>
+        </div>
+      }
     </div>
+
+
   );
 }
 

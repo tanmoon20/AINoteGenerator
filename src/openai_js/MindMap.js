@@ -1,18 +1,15 @@
 import {Card, CardBody} from "reactstrap";
-import {useEffect, useState} from 'react'
+import { Col, Row } from "reactstrap";
+import {useState} from 'react'
 import React, { useCallback, useLayoutEffect } from 'react';
 import ReactFlow, {
     MiniMap,
     Controls,
-    Background,
     useNodesState,
     useEdgesState,
     addEdge,
     NodeOrigin,
     Panel,
-    Handle,
-    NodeProps,
-    Position,
     ReactFlowProvider,
     useReactFlow
 } from 'reactflow';
@@ -101,6 +98,7 @@ function LayoutFlow() {
           <ReactFlow
               nodes={nodes}
               edges={edges}
+              onNodesChange={onNodesChange}
               onConnect={onConnect}
               nodeOrigin={nodeOrigin}
               fitView
@@ -154,13 +152,15 @@ function AddEdges(tempId, tempSource, tempTarget ){
   )
 }
 
-export default function () {
+const MindMap = (fileText) => {
 
-  function MindMap(){
+  console.log("mindmap")
+  console.log(fileText.fileText)
+  function GenerateMindMap(){
     //store the node color of each hierarchy
     const [nodeColor,setNodeColor] = useState([]);
-    // const input = "Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus";
-    const input = "- World War II\n  - Causes\n    - Treaty of Versailles\n    - Expansionist Policies (Germany, Japan, Italy)\n    - Political Instability\n  - Major Allied Powers\n    - United States\n    - United Kingdom\n    - Soviet Union\n    - France\n  - Major Axis Powers\n    - Germany\n    - Japan\n    - Italy\n  - Key Events\n    - Invasion of Poland (1939)\n    - Battle of Stalingrad (1942-1943)\n    - D-Day (1944)\n    - Atomic Bombings of Hiroshima and Nagasaki (1945)\n  - Holocaust\n    - Nazi Genocide\n    - Concentration Camps\n    - Millions of Lives Lost\n  - Consequences\n    - Formation of the United Nations\n    - Division of Germany\n    - Beginning of the Cold War\n    - Global Impact\n  - End of War\n    - Surrender of Axis Powers (1945)\n    - Signing of Peace Treaties\n    - Nuremberg Trials";
+    
+    const input = fileText.fileText
 
     let bulletPos; 
     let text;
@@ -212,80 +212,19 @@ export default function () {
   }
 
   return (
-    <Card>
-        <CardBody>
-            {initialNodes.length === 0 ? MindMap() : null}
-            {console.log(initialNodes)}
-            {console.log(initialEdges)}
-            <ReactFlowProvider>
-                <LayoutFlow />
-            </ReactFlowProvider>
-        </CardBody>
-    </Card>
+    <Row>
+      <Col lg="12">
+        <Card>
+          <CardBody>
+              {initialNodes.length === 0 ? GenerateMindMap() : null}
+              <ReactFlowProvider>
+                  <LayoutFlow />
+              </ReactFlowProvider>
+          </CardBody>
+        </Card>
+      </Col>
+    </Row>   
   );
 }
 
-// const MindMap = (text) =>{
-//     const[mindMap, setMindMap] = useState("");
-
-//     // const input = text;
-//     const input = "- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus";
-
-//     function generateMindMap(){
-//         console.log(input);
-        
-//         let startPos = input.indexOf("-"); //first occurence of "-"
-//         let newlinePos = 0; //first occurence of "\n"
-        
-//         while(startPos !== -1)
-//         {
-//             newlinePos = input.indexOf("\n", newlinePos + 1)
-//             startPos = input.indexOf("- ", startPos + 1)
-//             console.log("newline " + newlinePos)
-//             console.log("hierarchy " + (startPos - (newlinePos + 1)))
-//             console.log(startPos);
-//         }
-//     }
-
-//     const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-//     const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
-
-//     const onConnect = useCallback(
-//         (params) => setEdges((eds) => addEdge(params, eds)),
-//         [setEdges],
-//     );
-
-//     return (
-//         <Card>
-//             <CardBody className="d-grid gap-3">
-//                 <div>
-//                     <button onClick={generateMindMap}>Get MindMap From OpenAI API</button>
-//                     {/* {mindMap !== "" ?
-//                         <h3>mindMap: {mindMap}</h3>    
-//                         :
-//                         null
-//                     } */}
-//                 </div>
-//                 <div style={{ width: '100%', height: '100vh', border: '1px solid #000' }}>
-//                     <ReactFlow
-//                         nodes={nodes}
-//                         edges={edges}
-//                         onNodesChange={onNodesChange}
-//                         onEdgesChange={onEdgesChange}
-//                         onConnect={onConnect}
-//                         nodeOrigin={nodeOrigin}
-//                         defaultEdgeOptions={defaultEdgeOptions}
-//                         fitView
-//                         >
-//                         <Controls />
-//                         <MiniMap />
-//                         <Panel position="top-left">Mind Map</Panel>
-//                     </ReactFlow>
-//                 </div>
-//             </CardBody>
-//         </Card>
-//     )
-// };
-
-// export default MindMap
-
+export default MindMap;
