@@ -13,10 +13,11 @@ import {
   Button,
 } from "reactstrap";
 import { Button as AwsButton} from "@aws-amplify/ui-react";
-import { ReactComponent as LogoWhite } from "../assets/images/logos/xtremelogowhite.svg";
+import WhiteLogo from "../assets/images/logos/xtremelogowhite.png";
 import { Auth } from "aws-amplify";
 import { MyContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
+
 
 const Header = () => {
 
@@ -50,8 +51,8 @@ const Header = () => {
   return (
     <Navbar color="primary" dark expand="md">
       <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
-          <LogoWhite />
+        <NavbarBrand href="/" >
+          <img  className="mw-100" src={WhiteLogo} alt="WhiteLogo"/>
         </NavbarBrand>
         <Button
           color="primary"
