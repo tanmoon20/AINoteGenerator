@@ -47,13 +47,7 @@ const BlogData = [
 
 const Starter = () => {
   return (
-    <div>      
-      {/* Generate MindMap */}
-      <Row>
-        <Col lg="12">
-          <MindMap />
-        </Col>
-      </Row>      
+    <div>            
       {/***Top Cards***/}
       <Row>
         <Col sm="6" lg="3">
