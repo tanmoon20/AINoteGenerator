@@ -163,7 +163,19 @@ function VideoUpload() {
   return (
     <div>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '10vh' }}>
-        <input type="file" accept="video/*" onChange={handleFileChange} />
+        <label htmlFor="fileInput" className="file-input-label">
+          <Button className="btn" color="primary" size="lg" onClick={() => document.getElementById('fileInput').click()}>
+            Select Video
+          </Button>
+        </label>
+        <input
+          type="file"
+          id="fileInput"
+          accept="video/*"
+          style={{ display: 'none' }}
+          onChange={handleFileChange}
+        />
+       <div style={{ margin: '80px' }}></div>
         <Button className="btn" color="primary" size="lg" onClick={handleUpload} style={{ color: 'white' }}>
           Upload Video
         </Button>
@@ -208,10 +220,6 @@ function VideoUpload() {
           </Col>
         </Row>
       </div>
-
-      
-
-      
 
       {summarizedText !== "" ?
       <div>
