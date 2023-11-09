@@ -3,10 +3,19 @@
 /********************/
 @import url("https://fonts.googleapis.com/css2?family=Nunito:wght@200;300;400;600;700&display=swap");
 $font-family-sans-serif: "Nunito", sans-serif;
+
+.gradient-bg {
+  background: linear-gradient(to right, #98aede, #363b50,#12224b); /* Define your gradient colors here */
+}
+
+.bold-text {
+  font-weight: bold;
+}
+
 /*******************/
 // Theme Colors
 /********************/
-$primary: #7C6E7F;
+$primary: #817db1;
 $info: #9FBB73;
 $danger: #f64e60;
 $success: #0bb7af;
@@ -33,7 +42,7 @@ $theme-colors: (
 // scss-docs-start gray-color-variables
 $white: #fff !default;
 $gray-100: #f8f9fa !default;
-$gray-200: #DCDCDC !default;
+$gray-200: #f3f4f5 !default;
 $gray-300: #dee2e6 !default;
 $gray-400: #ced4da !default;
 $gray-500: #adb5bd !default;
@@ -51,7 +60,11 @@ $min-contrast-ratio: 2;
 /*******************/
 // Theme body bg & text color
 /********************/
-$body-bg: $gray-200 !default;
+body{
+  background: url('../images/bg/bg6.jpg') no-repeat;
+  background-size: cover;
+  min-height: 100vh;
+}
 $body-color: $gray-900 !default;
 
 /*******************/

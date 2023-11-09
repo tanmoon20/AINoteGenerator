@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Storage } from 'aws-amplify';
 import AWS from 'aws-sdk';
-import { Col, Row } from "reactstrap";
+import { Col, Row, Button } from "reactstrap";
 import {Card, CardBody} from "reactstrap";
 
 const API_KEY = "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"; //secure -> env variable
@@ -162,14 +162,17 @@ function VideoUpload() {
 
   return (
     <div>
-      <div>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '10vh' }}>
         <input type="file" accept="video/*" onChange={handleFileChange} />
-        <button onClick={handleUpload}>Upload Video</button>
-        <br></br>
-        <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
-          Fetch File from S3
-        </button>
-      </div>
+        <Button className="btn" color="primary" size="lg" onClick={handleUpload} style={{ color: 'white' }}>
+          Upload Video
+        </Button>
+        <div style={{ margin: '80px' }}></div> {/* Add space between the buttons */}
+          <Button className="btn" color="primary" size="lg" onClick={handleButtonClick} disabled={loadingTranscribe || loadingSummarized} style={{ color: 'white' }}>
+            Fetch File from S3
+          </Button>
+        </div>
+
       {/* {console.log(loadingTranscribe || loadingSummarized)} */}
       {loadingTranscribe && <p> loadingTranscribe...</p>}
       {loadingSummarized && <p> loadingSummarized...</p>}

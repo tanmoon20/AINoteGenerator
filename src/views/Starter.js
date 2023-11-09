@@ -1,8 +1,8 @@
-import { Col, Row } from "reactstrap";
+import React from "react";
+import { Col, Row, Button } from "reactstrap";
 import MindMap from "../openai_js/MindMap"
 import VideoUpload from "../openai_js/Forms";
-import BlackLogo from "../assets/images/logos/xtremelogo.png";
-
+import whiteLogo from "../assets/images/logos/xtremelogowhite-L.png";
 
 const Starter = () => {
   return (
@@ -10,10 +10,14 @@ const Starter = () => {
       <div className="container text-center">
         <div className="row align-items-center">
           <div className="col">
-            <img  src={BlackLogo} alt="BlackLogo"/>
+            <img  src={whiteLogo} className="img-fluid" alt="WhiteLogo"/>
+            <h1>
+              <span className="bold-text" style={{ color: 'white' }}> AI Video Summarizer: Your Shortcut to the Highlights! </span>
+            </h1>
           </div>
         </div>
       </div>
+
       {/*Upload & Summarize Button*/}
       <Row>
         <Col lg="12">
@@ -26,8 +30,14 @@ const Starter = () => {
         <Col lg="12">
           <MindMap />
         </Col>
-      </Row>      
+      </Row>
+
       
+      <div className="d-flex justify-content-center align-items-center" style={{ height: '5vh' }}>
+      <Button className="btn" color="primary" size="lg">
+        Save as PDF
+      </Button>
+      </div>
     </div>
   );
 };
