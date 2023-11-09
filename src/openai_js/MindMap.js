@@ -1,5 +1,5 @@
-import {Card, CardBody} from "reactstrap";
 import { Col, Row } from "reactstrap";
+import {Card, CardBody, Button} from "reactstrap";
 import {useState} from 'react'
 import React, { useCallback, useLayoutEffect } from 'react';
 import ReactFlow, {
@@ -106,14 +106,74 @@ function LayoutFlow() {
               <Controls />
               <MiniMap />
               <Panel position="top-right">
-                  <button onClick={() => onLayout({ direction: 'DOWN' })}>vertical layout</button>
-
-                  <button onClick={() => onLayout({ direction: 'RIGHT' })}>horizontal layout</button>
+                <div style={{ width: '100%', height: '100vh', border: '1px solid #000' }}>
+                  <Button className="btn" color="primary" size="lg" onClick={() => onLayout({ direction: 'DOWN' })}>vertical layout</Button>
+                  
+                  <Button className="btn" color="primary" size="lg" onClick={() => onLayout({ direction: 'RIGHT' })}>horizontal layout</Button>
+                </div>
               </Panel>
           </ReactFlow>
       </div>
   );
 }
+
+// const LayoutFlow = () => {
+//   const [nodes, , onNodesChange] = useNodesState(initialNodes);
+//   const [edges, , onEdgesChange] = useEdgesState(initialEdges);
+//   const { getLayoutedElements } = useLayoutedElements();
+
+//   return (
+//       <div style={{ width: '100%', height: '100vh', border: '1px solid #000' }}>
+//           <ReactFlow
+//           nodes={nodes}
+//           edges={edges}
+//           onNodesChange={onNodesChange}
+//           onEdgesChange={onEdgesChange}
+//           fitView
+//           >
+//           <Panel position="top-right">
+//               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '3vh' }}>
+//                   <Button className="btn" color="primary" size="lg"
+//                   onClick={() =>
+//                       getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
+//                   }
+//                   >
+//                   vertical layout
+//                   </Button>
+//                   <div style={{ margin: '10px' }}></div>
+//                   <Button className="btn" color="primary" size="lg"
+//                   onClick={() =>
+//                       getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+//                   }
+//                   >
+//                   horizontal layout
+//                   </Button>
+//                   <div style={{ margin: '10px' }}></div>
+//                   <Button className="btn" color="primary" size="lg"
+//                   onClick={() =>
+//                       getLayoutedElements({
+//                       'elk.algorithm': 'org.eclipse.elk.radial',
+//                       })
+//                   }
+//                   >
+//                   radial layout
+//                   </Button>
+//                   <div style={{ margin: '10px' }}></div>
+//                   <Button className="btn" color="primary" size="lg"
+//                   onClick={() =>
+//                       getLayoutedElements({
+//                       'elk.algorithm': 'org.eclipse.elk.force',
+//                       })
+//                   }
+//                   >
+//                   force layout
+//                   </Button>
+//               </div>
+//           </Panel>
+//           </ReactFlow>
+//       </div>
+//     );
+// }
 
 function getDarkColor() {
   var color = '#';
@@ -132,7 +192,6 @@ function AddNodes(tempId, tempLabel, nodeColor){
       style: { backgroundColor: nodeColor, color: 'white' },
     },
   ]
-  
 
   return(
     initialNodes.push(nextNode.at(0))
