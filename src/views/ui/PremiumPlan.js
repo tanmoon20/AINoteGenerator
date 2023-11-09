@@ -10,20 +10,21 @@ const PremiumPlan = () =>{
     return (
         <div>
             <Row style={{ display: "flex" , fontSize:"1.3rem"}}>
-                <Col sm="6" style={{ flex: "1" }}>
-                    <Card style={{height:"100%" , margin:"1rem"}}> 
-                        <CardBody style={{padding:"2rem"}}>
-                            <CardTitle tag="h3">
-                            Basic <br></br>(Free) 
-                            </CardTitle>
-                            <CardText>
-                                <ul style={{padding:"2rem"}}>
-                                    <li>Summarize videos up to 20 minutes</li><br></br>
-                                    <li>Maximum 3 videos per day</li>
-                                </ul>
-                            </CardText>
-                        </CardBody>
-                    </Card>
+            <Col sm="6" style={{ flex: "1" }}>
+                <Card style={{ height: "100%", margin: "1rem", backgroundColor: "white", border: "1px solid #ddd" }}>
+                    <CardBody style={{ padding: "2rem" }}>
+                    <CardTitle tag="h3">
+                        Basic <br />(Free)
+                    </CardTitle>
+                    <CardText>
+                        <ul style={{ padding: "2rem" }}>
+                        <li>Summarize videos up to 20 minutes</li>
+                        <br />
+                        <li>Maximum 3 videos per day</li>
+                        </ul>
+                    </CardText>
+                    </CardBody>
+                </Card>
                 </Col>
                 <Col sm="6" style={{ flex: "1" }}>
                     <Card color="light" style={{height:"100%", margin:"1rem"}}>

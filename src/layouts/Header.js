@@ -87,10 +87,12 @@ const Header = () => {
               <span style={{ fontSize: '20px' }}> About </span>
             </Link>
           </NavItem>
-          
+
           <NavItem>
             <Link to="/premium" className="nav-link">
-              Upgrade
+              <Button className="btn" color="primary" size="sm">
+                  Upgrade to Premium
+              </Button>
             </Link>
           </NavItem>
 
@@ -105,16 +107,6 @@ const Header = () => {
               <DropdownItem>Reset</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
-          
-          {user === null && 
-            <NavItem>
-              <Link to="/premium" className="nav-link">
-                <Button className="btn" color="primary" size="sm">
-                  Upgrade to Premium
-                </Button>
-              </Link>
-            </NavItem>
-          }
 
           {user === null && 
             <NavItem>
