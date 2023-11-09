@@ -17,6 +17,7 @@ const Tables = lazy(() => import("../views/ui/Tables"));
 const Breadcrumbs = lazy(() => import("../views/ui/Breadcrumbs"));
 const Login = lazy(() => import("../views/ui/Login"));
 const Validate = lazy(() => import("../views/ui/Validate"));
+const PremiumPlan = lazy(() => import("../views/ui/PremiumPlan.js"));
 
 /*****Routes******/
 
@@ -37,6 +38,7 @@ const ThemeRoutes = [
       { path: "/breadcrumbs", exact: true, element: <Breadcrumbs /> },
       { path: "/login", exact: true, element: <Login /> },
       { path: "/validate", exact: true, element: <Validate /> },
+      { path: "/premium", exact: true, element: <PremiumPlan /> },
     ],
   },
 ];
