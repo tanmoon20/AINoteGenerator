@@ -87,6 +87,12 @@ const Header = () => {
               <span style={{ fontSize: '20px' }}> About </span>
             </Link>
           </NavItem>
+          
+          <NavItem>
+            <Link to="/premium" className="nav-link">
+              Upgrade
+            </Link>
+          </NavItem>
 
           <UncontrolledDropdown inNavbar nav>
             <DropdownToggle caret nav>
