@@ -96,6 +96,11 @@ const Header = () => {
               About
             </Link>
           </NavItem>
+          <NavItem>
+            <Link to="/premium" className="nav-link">
+              Upgrade
+            </Link>
+          </NavItem>
           <UncontrolledDropdown inNavbar nav>
             <DropdownToggle caret nav>
               DD Menu
