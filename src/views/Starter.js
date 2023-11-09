@@ -1,6 +1,5 @@
 import React from "react";
 import { Col, Row, Button } from "reactstrap";
-import MindMap from "../openai_js/MindMap"
 import VideoUpload from "../openai_js/Forms";
 import whiteLogo from "../assets/images/logos/xtremelogowhite-L.png";
 
@@ -25,19 +24,6 @@ const Starter = () => {
         </Col>
       </Row>   
 
-      {/* Generate MindMap */}
-      <Row>
-        <Col lg="12">
-          <MindMap />
-        </Col>
-      </Row>
-
-      
-      <div className="d-flex justify-content-center align-items-center" style={{ height: '5vh' }}>
-      <Button className="btn" color="primary" size="lg">
-        Save as PDF
-      </Button>
-      </div>
     </div>
   );
 };

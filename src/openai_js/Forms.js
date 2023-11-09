@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { Storage } from 'aws-amplify';
 import AWS from 'aws-sdk';
 import { Col, Row } from "reactstrap";
-import {Card, CardBody} from "reactstrap";
-import MindMap from '../../openai_js/MindMap';
+import {Card, CardBody, Button} from "reactstrap";
+import MindMap from './MindMap';
 
 const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; //secure -> env variable
 
@@ -245,9 +245,11 @@ function VideoUpload() {
           Fetch File from S3
         </Button>
       </div>
-      {loadingTranscribe && <p> loadingTranscribe...</p>}
-      {loadingSummarized && <p> loadingSummarized...</p>}
-      {loadingMindMap && <p> loadingMindMap...</p>}
+      <div>
+        {loadingTranscribe && <p style={{color:'white'}}> LoadingTranscribe...</p>}
+        {loadingSummarized && <p style={{color:'white'}}> LoadingSummarized...</p>}
+        {loadingMindMap && <p style={{color:'white'}}> LoadingMindMap...</p>}
+      </div>
       {fileText && 
       <div className = "mt-3">
         <Row>
@@ -291,6 +293,12 @@ function VideoUpload() {
       {mindMapText &&
         <div>
           <MindMap fileText={mindMapText}/>
+
+          <div className="d-flex justify-content-center align-items-center" style={{ height: '5vh' }}>
+            <Button className="btn" color="primary" size="lg">
+              Save as PDF
+            </Button>
+          </div>
         </div>
       }
     </div>
