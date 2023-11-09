@@ -4,7 +4,9 @@ import AWS from 'aws-sdk';
 import { Col, Row } from "reactstrap";
 import {Card, CardBody} from "reactstrap";
 
+AWS.config.update({ region: 'us-east-1' }); // Replace 'us-east-1' with your desired region
 const API_KEY = "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"; //secure -> env variable
+
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -17,6 +19,7 @@ function VideoUpload() {
     if (selectedFile) {
       try {
         await Storage.put(selectedFile.name, selectedFile);
+        setSuccessText("Uploaded Successfully. Please wait for about 1 minutes before pressing the fetching file button.")
         console.log('Video uploaded successfully.');
       } catch (error) {
         console.error('Error uploading video:', error);
@@ -25,6 +28,7 @@ function VideoUpload() {
   };
 
   const [fileText, setFileText] = useState('');
+  const [SuccessText, setSuccessText] = useState('');
   let filetimeText = '';
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
@@ -165,6 +169,7 @@ function VideoUpload() {
       <div>
         <input type="file" accept="video/*" onChange={handleFileChange} />
         <button onClick={handleUpload}>Upload Video</button>
+        <span>  </span>{SuccessText}
         <br></br>
         <button onClick={() => {handleButtonClick()}} disabled={loadingTranscribe || loadingSummarized}>
           Fetch File from S3

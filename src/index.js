@@ -10,6 +10,8 @@ import {Amplify} from 'aws-amplify';
 import awsconfig from './aws-exports'; // Import your existing aws-exports.js file
 
 Amplify.configure(awsconfig);
+
+
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement);
 
