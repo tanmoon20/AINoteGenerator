@@ -17,7 +17,7 @@ import WhiteLogo from "../assets/images/logos/xtremelogowhite.png";
 import { Auth } from "aws-amplify";
 import { MyContext } from './UserContext';
 import { useNavigate } from 'react-router-dom';
-
+import userAvatar from '../assets/images/users/user1.jpg'
 
 const Header = () => {
 
@@ -48,11 +48,13 @@ const Header = () => {
   const showMobilemenu = () => {
     document.getElementById("sidebarArea").classList.toggle("showSidebar");
   };
+
+
   return (
-    <Navbar color="primary" dark expand="md">
+    <Navbar className="white" dark expand="md">
       <div className="d-flex align-items-center">
         <NavbarBrand href="/" >
-          <img  className="mw-100" src={WhiteLogo} alt="WhiteLogo"/>
+          <img src={WhiteLogo} className="img-fluid" alt="WhiteLogo" style={{width: '150px', height: 'auto'}}/>
         </NavbarBrand>
         <Button
           color="primary"
@@ -62,7 +64,7 @@ const Header = () => {
           <i className="bi bi-list"></i>
         </Button>
       </div>
-      <div className="hstack gap-2">
+      <div className="hstack gap-2 justify-content-start">
         <Button
           color="primary"
           size="sm"
@@ -79,27 +81,23 @@ const Header = () => {
 
       <Collapse navbar isOpen={isOpen}>
         {user !== null && <AwsButton onClick={handleSignOut}>SignOut</AwsButton> }
-        <Nav className="me-auto" navbar>
-          {user === null && 
-            <NavItem>
-                <Link to="/login" className="nav-link">
-                  Login
-                </Link>
-            </NavItem>}
-          
+        
+        <Nav className="ms-auto" navbar>
           <NavItem>
             <Link to="/starter" className="nav-link">
-              Starter
+             <span style={{ fontSize: '20px' }}> Home </span>
             </Link>
           </NavItem>
+
           <NavItem>
             <Link to="/about" className="nav-link">
-              About
+              <span style={{ fontSize: '20px' }}> About </span>
             </Link>
           </NavItem>
+
           <UncontrolledDropdown inNavbar nav>
             <DropdownToggle caret nav>
-              DD Menu
+              <span style={{ fontSize: '20px' }}> DD Menu </span>
             </DropdownToggle>
             <DropdownMenu end>
               <DropdownItem>Option 1</DropdownItem>
@@ -108,6 +106,25 @@ const Header = () => {
               <DropdownItem>Reset</DropdownItem>
             </DropdownMenu>
           </UncontrolledDropdown>
+          
+          {user === null && 
+            <NavItem>
+              <Link to="/premium" className="nav-link">
+                <Button className="btn" color="primary" size="sm">
+                  Upgrade to Premium
+                </Button>
+              </Link>
+            </NavItem>
+          }
+
+          {user === null && 
+            <NavItem>
+              <Link to="/login" className="nav-link">
+                <img src={userAvatar} alt="Blank Avatar" style={{ width: '35px', height: '35px' }} />
+              </Link>
+            </NavItem>
+          }
+
         </Nav>
 
         {/* <Dropdown isOpen={dropdownOpen} toggle={toggle}>

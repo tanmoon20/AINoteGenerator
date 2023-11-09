@@ -1,4 +1,4 @@
-import {Card, CardBody} from "reactstrap";
+import {Card, CardBody, Button} from "reactstrap";
 import {useState} from 'react'
 import React, { useCallback } from 'react';
 import ReactFlow, {
@@ -80,38 +80,43 @@ const LayoutFlow = () => {
             fitView
             >
             <Panel position="top-right">
-                <button
-                onClick={() =>
-                    getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
-                }
-                >
-                vertical layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
-                }
-                >
-                horizontal layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({
-                    'elk.algorithm': 'org.eclipse.elk.radial',
-                    })
-                }
-                >
-                radial layout
-                </button>
-                <button
-                onClick={() =>
-                    getLayoutedElements({
-                    'elk.algorithm': 'org.eclipse.elk.force',
-                    })
-                }
-                >
-                force layout
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '3vh' }}>
+                    <Button className="btn" color="primary" size="lg"
+                    onClick={() =>
+                        getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'DOWN' })
+                    }
+                    >
+                    vertical layout
+                    </Button>
+                    <div style={{ margin: '10px' }}></div>
+                    <Button className="btn" color="primary" size="lg"
+                    onClick={() =>
+                        getLayoutedElements({ 'elk.algorithm': 'layered', 'elk.direction': 'RIGHT' })
+                    }
+                    >
+                    horizontal layout
+                    </Button>
+                    <div style={{ margin: '10px' }}></div>
+                    <Button className="btn" color="primary" size="lg"
+                    onClick={() =>
+                        getLayoutedElements({
+                        'elk.algorithm': 'org.eclipse.elk.radial',
+                        })
+                    }
+                    >
+                    radial layout
+                    </Button>
+                    <div style={{ margin: '10px' }}></div>
+                    <Button className="btn" color="primary" size="lg"
+                    onClick={() =>
+                        getLayoutedElements({
+                        'elk.algorithm': 'org.eclipse.elk.force',
+                        })
+                    }
+                    >
+                    force layout
+                    </Button>
+                </div>
             </Panel>
             </ReactFlow>
         </div>
