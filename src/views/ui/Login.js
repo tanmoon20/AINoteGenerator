@@ -86,8 +86,8 @@ function Login() {
       <MDBTabsContent>
 
         <MDBTabsPane show={justifyActive === 'tab1'}>
-          <MDBInput wrapperClass='mb-4' label='Username' id='username1' type='text' onChange={(e) => setUsername(e.target.value)}/>
-          <MDBInput wrapperClass='mb-4' label='Password' id='password1' type='password' onChange={(e) => setPassword(e.target.value)}/>
+          <MDBInput wrapperClass='mb-4 text-primary' label='Username' id='username1' type='text' onChange={(e) => setUsername(e.target.value)}/>
+          <MDBInput wrapperClass='mb-4 text-primary' label='Password' id='password1' type='password' onChange={(e) => setPassword(e.target.value)}/>
 
           <div className="d-flex justify-content-between mx-4 mb-4">
             {/* <MDBCheckbox name='flexCheck' value='' id='flexCheckDefault' label='Remember me' /> */}
@@ -99,9 +99,9 @@ function Login() {
         </MDBTabsPane>
 
         <MDBTabsPane show={justifyActive === 'tab2'}>
-          <MDBInput wrapperClass='mb-4' label='Username' id='username2' type='text' onChange={(e) => setUsername(e.target.value)}/>
-          <MDBInput wrapperClass='mb-4' label='Password' id='password2' type='password'onChange={(e) => setPassword(e.target.value)}/>
-          <MDBInput wrapperClass='mb-4' label='Email' id='email2' type='email' onChange={(e) => setEmail(e.target.value)}/>
+          <MDBInput wrapperClass='mb-4 text-primary' label='Username' id='username2' type='text' onChange={(e) => setUsername(e.target.value)}/>
+          <MDBInput wrapperClass='mb-4 text-primary' label='Password' id='password2' type='password'onChange={(e) => setPassword(e.target.value)}/>
+          <MDBInput wrapperClass='mb-4 text-primary' label='Email' id='email2' type='email' onChange={(e) => setEmail(e.target.value)}/>
         
           <div className='d-flex justify-content-center mb-4'>
             {/* <MDBCheckbox name='flexCheck' id='flexCheckDefault' label='I have read and agree to the terms' /> */}

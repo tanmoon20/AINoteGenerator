@@ -56,13 +56,6 @@ const Header = () => {
         <NavbarBrand href="/" >
           <img src={WhiteLogo} className="img-fluid" alt="WhiteLogo" style={{width: '150px', height: 'auto'}}/>
         </NavbarBrand>
-        <Button
-          color="primary"
-          className="d-lg-none"
-          onClick={() => showMobilemenu()}
-        >
-          <i className="bi bi-list"></i>
-        </Button>
       </div>
       <div className="hstack gap-2 justify-content-start">
         <Button
