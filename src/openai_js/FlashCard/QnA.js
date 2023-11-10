@@ -52,8 +52,8 @@ const FlashCard = (fileText) => {
 
     const wordList = input.split("\n");
     wordList.forEach((word,index)=>{
-      QPos = word.indexOf("Q:")
-      APos = word.indexOf("A:")
+      QPos = word.lastIndexOf("Q:")
+      APos = word.lastIndexOf("A:")
       if(QPos != '-1'){
         q = "Question: " + word.substring(QPos+2)
       }

@@ -6,8 +6,8 @@ import {Card, CardBody, Button} from "reactstrap";
 import MindMap from './mindmap/MindMap';
 import FlashCard from './FlashCard/QnA';
 
-AWS.config.update({ region: process.env.REACT_APP_region });
-const API_KEY = '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'; //secure -> env variable
+AWS.config.update({ region: 'us-east-1' });
+const API_KEY = process.env.REACT_APP_API_KEY; //secure -> env variable
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);

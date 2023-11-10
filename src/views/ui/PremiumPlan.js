@@ -30,13 +30,18 @@ const PremiumPlan = () =>{
                                 <img src={tickIcon} alt="Tick" style={{ width: "20px", marginRight: "7px" }} />
                                 Maximum 3 videos per day
                             </p>
+                        <br></br>
+                            <p>
+                                <img src={tickIcon} alt="Tick" style={{ width: "20px", marginRight: "7px"}} />
+                                Mind map to organize and structure the information
+                            </p> 
                         </ul>
                     </CardText>
                     </CardBody>
                     <div className="d-flex justify-content-center align-items-center" style={{ height: '20vh' }}>
-                        <Button className="btn" outline color="primary" size="lg">
+                        {/* <Button className="btn" outline color="primary" size="lg">
                             Current Plan
-                        </Button>
+                        </Button> */}
                     </div>
                 </Card>
                 </Col>
@@ -69,9 +74,9 @@ const PremiumPlan = () =>{
                                 </ul>
                             </CardText>
                             <div style={{ display: "flex", justifyContent: "center" }}>
-                                <Button className="btn" color="primary" size="lg">
+                                {/* <Button className="btn" color="primary" size="lg">
                                     Upgrade now!
-                                </Button>
+                                </Button> */}
                             </div>
                         </CardBody>
                     </Card>
@@ -100,8 +105,8 @@ const PremiumPlan = () =>{
                             </CardText>
 
                             <div style={{ display: "flex", justifyContent: "center"}}>
-                                <Button className="btn" color="primary" size="lg">
-                                    Upgrade now!
+                                <Button className="btn" outline color="primary" size="lg">
+                                    Current Plan
                                 </Button>
                             </div>
                             
