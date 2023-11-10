@@ -5,6 +5,7 @@ import { Col, Row } from "reactstrap";
 import {Card, CardBody, Button} from "reactstrap";
 import MindMap from './MindMap';
 
+AWS.config.update({ region: 'us-east-1' });
 const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; //secure -> env variable
 
 function VideoUpload() {
@@ -12,12 +13,15 @@ function VideoUpload() {
 
   const handleFileChange = (e) => {
     setSelectedFile(e.target.files[0]);
+    setSuccessText("Video is selected successfully. Next, press the Upload Video Button.")
   };
 
   const handleUpload = async () => {
     if (selectedFile) {
       try {
-        await Storage.put(selectedFile.name, selectedFile);
+        setSuccessText("Loading... Uploading...")
+        // await Storage.put(selectedFile.name, selectedFile);
+        setSuccessText("Uploaded Successfully. Please wait for about 1 minutes before pressing the fetching file button.")
         console.log('Video uploaded successfully.');
       } catch (error) {
         console.error('Error uploading video:', error);
@@ -26,6 +30,7 @@ function VideoUpload() {
   };
 
   const [fileText, setFileText] = useState('');
+  const [SuccessText, setSuccessText] = useState('');
   let filetimeText = '';
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
@@ -34,14 +39,15 @@ function VideoUpload() {
 
 
   const handleButtonClick = async () => {
+    setSuccessText("")
     setLoadingTranscribe(true);
     const AWS = require('aws-sdk');
 
-    console.log(process.env.REACT_APP_region)
+
     AWS.config.update({
-      region: process.env.REACT_APP_region, // Replace with your desired region
-      accessKeyId: process.env.REACT_APP_accessKeyId, // Add your access key ID here
-      secretAccessKey: process.env.REACT_APP_secretAccessKey // Add your secret access key here
+      region: 'us-east-1', // Replace with your desired region
+      accessKeyId: 'AKIASVSPLFEQ4QUUEV4X', // Add your access key ID here
+      secretAccessKey:  'pX03Z3399rsbU9QzUaBVuadSimqDz0lQhLFnfqej'// Add your secret access key here
     });
 
     // Replace 'your-s3-bucket-name' and 'your-s3-key' with the actual bucket name and key
@@ -190,8 +196,8 @@ function VideoUpload() {
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-              // {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph.\n" + summarizedText}
-            {role: "user", content: "Generate a mind map with bullet point outline."}
+            {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph.\n" + summarizedText}
+            // {role: "user", content: "Generate a mind map with bullet point outline."}
           ],
           "temperature": 0,
           "max_tokens": 1024,
@@ -201,20 +207,20 @@ function VideoUpload() {
       }
       
       try{  
-        await fetch("https://api.openai.com/v1/chat/completions", {
-            method: "POST",
-            headers: {
-                "Content-Type":"application/json",
-                "Authorization":"Bearer "+ API_KEY
-            },
-            body: JSON.stringify(APIBody)
-        }).then((data) => {
-            return data.json();
-        }).then((data) => {
-            console.log(data);
-            setMindMapText(data.choices[0].message.content);
-        });
-        // setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
+        // await fetch("https://api.openai.com/v1/chat/completions", {
+        //     method: "POST",
+        //     headers: {
+        //         "Content-Type":"application/json",
+        //         "Authorization":"Bearer "+ API_KEY
+        //     },
+        //     body: JSON.stringify(APIBody)
+        // }).then((data) => {
+        //     return data.json();
+        // }).then((data) => {
+        //     console.log(data);
+        //     setMindMapText(data.choices[0].message.content);
+        // });
+        setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
       }catch(e){
         console.log(e);
       }finally{
@@ -293,6 +299,12 @@ function VideoUpload() {
         <Button className="btn" color="primary" size="lg" onClick={handleButtonClick} disabled={loadingTranscribe || loadingSummarized} style={{ color: 'white' }}>
           Fetch File from S3
         </Button>
+      </div>
+      <div id = "selectVideoDiv">
+
+      </div>
+      <div style={{color:'white'}}>
+        {SuccessText}
       </div>
       <div>
         {loadingTranscribe && <p style={{color:'white'}}> LoadingTranscribe...</p>}
