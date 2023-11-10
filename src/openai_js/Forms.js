@@ -4,6 +4,7 @@ import AWS from 'aws-sdk';
 import { Col, Row } from "reactstrap";
 import {Card, CardBody, Button} from "reactstrap";
 import MindMap from './MindMap';
+import FlashCard from './FlashCard/QnA';
 
 AWS.config.update({ region: 'us-east-1' });
 const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; //secure -> env variable
@@ -20,7 +21,7 @@ function VideoUpload() {
     if (selectedFile) {
       try {
         setSuccessText("Loading... Uploading...")
-        // await Storage.put(selectedFile.name, selectedFile);
+        await Storage.put(selectedFile.name, selectedFile);
         setSuccessText("Uploaded Successfully. Please wait for about 1 minutes before pressing the fetching file button.")
         console.log('Video uploaded successfully.');
       } catch (error) {
@@ -196,7 +197,7 @@ function VideoUpload() {
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-            {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph.\n" + summarizedText}
+            {role: "user", content: "Generate a mindmap with bullet point outline, no bold and potential Q&A in Q: A: format from the given information.\n" + summarizedText}
             // {role: "user", content: "Generate a mind map with bullet point outline."}
           ],
           "temperature": 0,
@@ -362,6 +363,10 @@ function VideoUpload() {
           </div>
         </div>
       }
+
+      <div>
+        {/* <FlashCard /> */}
+      </div>
     </div>
 
 
