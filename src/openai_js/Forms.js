@@ -3,7 +3,7 @@ import { Storage } from 'aws-amplify';
 import AWS from 'aws-sdk';
 import { Col, Row } from "reactstrap";
 import {Card, CardBody, Button} from "reactstrap";
-import MindMap from './MindMap';
+import MindMap from './mindmap/MindMap';
 import FlashCard from './FlashCard/QnA';
 
 AWS.config.update({ region: process.env.REACT_APP_region });
@@ -169,10 +169,10 @@ function VideoUpload() {
         }).then((data) => {
             console.log(data);
             setSummarizedText(data.choices[0].message.content);
-            // setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
+        //     setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
             {callOpenAIAPIMindMapQnA(data.choices[0].message.content)}
+        //     callOpenAIAPIMindMapQnA("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
         });
-        // setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
       }catch(e){
         console.log(e);
       }finally{
