@@ -7,7 +7,7 @@ import MindMap from './MindMap';
 import FlashCard from './FlashCard/QnA';
 
 AWS.config.update({ region: 'us-east-1' });
-const API_KEY = process.env.REACT_APP_OPENAI_API_KEY; //secure -> env variable
+const API_KEY = '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'; //secure -> env variable
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -35,8 +35,7 @@ function VideoUpload() {
   let filetimeText = '';
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
-  const [loadingMindMap, setLoadingMindMap] = useState(false);
-  const [loadingQna, setloadingQna] = useState(false);
+  const [loadingMindMapqna, setLoadingMindMapqna] = useState(false);
 
 
   const handleButtonClick = async () => {
@@ -84,8 +83,8 @@ function VideoUpload() {
         const endTime = parseFloat(item.end_time);
         const content = item.alternatives[0].content;
 
-        console.log(`Start Time: ${startTime}`);
-        console.log(`End Time: ${endTime}`);
+        // console.log(`Start Time: ${startTime}`);
+        // console.log(`End Time: ${endTime}`);
         //console.log(`Content: ${content}`);
         if (i==0){
           timestamp+=startTime;
@@ -109,15 +108,13 @@ function VideoUpload() {
         } 
       }
       timestampSentence = timestampSentence + endTable
-      console.log("timestampSentence: ",timestampSentence)
-      console.log("transcript ",transcript)
+      // console.log("timestampSentence: ",timestampSentence)
+      // console.log("transcript ",transcript)
       setFileText(transcript);
       filetimeText=timestampSentence;
       filetimeText = beginningLayout + filetimeText + endLayout;
       document.getElementById('filetimeText').innerHTML=filetimeText;
-
       callOpenAIAPISummarize(transcript);
-      callOpenAIAPIMindMap(transcript);
     } catch (error) {
       console.error('Error fetching file:', error);
     }finally{
@@ -133,8 +130,7 @@ function VideoUpload() {
 
   // call openai api
   const[summarizedText, setSummarizedText] = useState("")
-  const[mindMapText, setMindMapText] = useState("")
-  const[qnaText, setQnaText] = useState("")
+  const[mindMapQnAText, setMindMapQnAText] = useState("")
 
   async function callOpenAIAPISummarize(text){
     setLoadingSummarized(true);
@@ -146,12 +142,12 @@ function VideoUpload() {
     else
     {
       console.log("Calling the OpenAIAPI");
+      // console.log(text)
 
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-              {role: "user", content: "Summarize content you are provided with.\n" + text}
-              // {role: "user", content: "Create a mindmap you are provided with in bullet point outline." + text}
+              {role: "user", content: "Make it short, summarize content you are provided with.\n" + text}
           ],
           "temperature": 0,
           "max_tokens": 1024,
@@ -173,6 +169,8 @@ function VideoUpload() {
         }).then((data) => {
             console.log(data);
             setSummarizedText(data.choices[0].message.content);
+            // setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
+            {callOpenAIAPIMindMapQnA(data.choices[0].message.content)}
         });
         // setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
       }catch(e){
@@ -183,8 +181,8 @@ function VideoUpload() {
     }
   }
 
-  async function callOpenAIAPIMindMap(text){
-    setLoadingMindMap(true);
+  async function callOpenAIAPIMindMapQnA(text){
+    setLoadingMindMapqna(true);
     console.log("call open ai api mindmap");
     if(text == "")
     {
@@ -197,7 +195,7 @@ function VideoUpload() {
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-            {role: "user", content: "Generate a mindmap with bullet point outline, no bold and potential Q&A in Q: A: format from the given information.\n" + summarizedText}
+            {role: "user", content: "Generate a mindmap with bullet point outline, no bold and potential Q&A in Q: A: format from the given information.\n" + text}
             // {role: "user", content: "Generate a mind map with bullet point outline."}
           ],
           "temperature": 0,
@@ -208,74 +206,27 @@ function VideoUpload() {
       }
       
       try{  
-        // await fetch("https://api.openai.com/v1/chat/completions", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type":"application/json",
-        //         "Authorization":"Bearer "+ API_KEY
-        //     },
-        //     body: JSON.stringify(APIBody)
-        // }).then((data) => {
-        //     return data.json();
-        // }).then((data) => {
-        //     console.log(data);
-        //     setMindMapText(data.choices[0].message.content);
-        // });
-        setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
+        await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+ API_KEY
+            },
+            body: JSON.stringify(APIBody)
+        }).then((data) => {
+            return data.json();
+        }).then((data) => {
+            console.log(data);
+            setMindMapQnAText(data.choices[0].message.content);
+        });
+        // setMindMapQnAText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus\nQ:Today a good day\nA:Yes")
       }catch(e){
         console.log(e);
       }finally{
-        setLoadingMindMap(false);
+        setLoadingMindMapqna(false);
       }
     }
   }
-
-  async function callOpenAIAPIQnA(text){
-    setloadingQna(true);
-    console.log("call open ai api qna");
-    if(text == "")
-    {
-      console.log("empty text qna");
-    }
-    else
-    {
-      console.log("Calling the OpenAIAPI");
-
-      const APIBody = {
-          "model": "gpt-3.5-turbo",
-          "messages": [
-              {role: "user", content: "Generate potential Q&A in Q: A: format from the given information.\n" + summarizedText}
-          ],
-          "temperature": 0,
-          "max_tokens": 1024,
-          "top_p":1.0,
-          "frequency_penalty":0.0,
-          "presence_penalty":0.0
-      }
-      
-      try{  
-        // await fetch("https://api.openai.com/v1/chat/completions", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type":"application/json",
-        //         "Authorization":"Bearer "+ API_KEY
-        //     },
-        //     body: JSON.stringify(APIBody)
-        // }).then((data) => {
-        //     return data.json();
-        // }).then((data) => {
-        //     console.log(data);
-        //     setMindMapText(data.choices[0].message.content);
-        // });
-        setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
-      }catch(e){
-        console.log(e);
-      }finally{
-        setLoadingMindMap(false);
-      }
-    }
-  }
-
 
   return (
     <div>
@@ -310,7 +261,7 @@ function VideoUpload() {
       <div>
         {loadingTranscribe && <p style={{color:'white'}}> LoadingTranscribe...</p>}
         {loadingSummarized && <p style={{color:'white'}}> LoadingSummarized...</p>}
-        {loadingMindMap && <p style={{color:'white'}}> LoadingMindMap...</p>}
+        {loadingMindMapqna && <p style={{color:'white'}}> LoadingMindMap and FlashCard...</p>}
       </div>
       {fileText && 
       <div className = "mt-3">
@@ -348,27 +299,31 @@ function VideoUpload() {
             </Card>
           </Col>
         </Row>
+
+        {/* Generate MindMap */}
+        {mindMapQnAText &&
+          <div>
+            <MindMap fileText={mindMapQnAText}/>
+
+            <div>
+              <Row>
+                <Col lg="12">
+                  <FlashCard fileText={mindMapQnAText}/>
+                </Col>
+              </Row>
+
+              <div className="d-flex justify-content-center align-items-center" style={{ height: '5vh' }}>
+                <Button className="btn" color="primary" size="lg">
+                  Save as PDF
+                </Button>
+              </div>
+            </div>
+          </div>
+        }
+
       </div>
        : null}
-      
-      {/* Generate MindMap */}
-      {mindMapText &&
-        <div>
-          <MindMap fileText={mindMapText}/>
-
-          <div className="d-flex justify-content-center align-items-center" style={{ height: '5vh' }}>
-            <Button className="btn" color="primary" size="lg">
-              Save as PDF
-            </Button>
-          </div>
-        </div>
-      }
-
-      <div>
-        {/* <FlashCard /> */}
-      </div>
     </div>
-
 
   );
 }
