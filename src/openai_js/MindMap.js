@@ -1,6 +1,6 @@
 import { Col, Row } from "reactstrap";
 import {Card, CardBody, Button} from "reactstrap";
-import {useState} from 'react'
+import {useEffect, useState} from 'react'
 import React, { useCallback, useLayoutEffect } from 'react';
 import ReactFlow, {
     MiniMap,
@@ -154,7 +154,7 @@ function AddEdges(tempId, tempSource, tempTarget ){
 const MindMap = (fileText) => {
 
   console.log("mindmap")
-  console.log(fileText.fileText)
+  // console.log(fileText.fileText)
   function GenerateMindMap(){
     //store the node color of each hierarchy
     const [nodeColor,setNodeColor] = useState([]);
