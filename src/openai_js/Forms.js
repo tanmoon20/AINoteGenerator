@@ -30,6 +30,8 @@ function VideoUpload() {
   const [loadingTranscribe, setLoadingTranscribe] = useState(false);
   const [loadingSummarized, setLoadingSummarized] = useState(false);
   const [loadingMindMap, setLoadingMindMap] = useState(false);
+  const [loadingQna, setloadingQna] = useState(false);
+
 
   const handleButtonClick = async () => {
     setLoadingTranscribe(true);
@@ -125,6 +127,7 @@ function VideoUpload() {
   // call openai api
   const[summarizedText, setSummarizedText] = useState("")
   const[mindMapText, setMindMapText] = useState("")
+  const[qnaText, setQnaText] = useState("")
 
   async function callOpenAIAPISummarize(text){
     setLoadingSummarized(true);
@@ -140,7 +143,7 @@ function VideoUpload() {
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-              {role: "user", content: "Summarize content you are provided with" + text}
+              {role: "user", content: "Summarize content you are provided with.\n" + text}
               // {role: "user", content: "Create a mindmap you are provided with in bullet point outline." + text}
           ],
           "temperature": 0,
@@ -151,20 +154,20 @@ function VideoUpload() {
       }
       
       try{  
-        // await fetch("https://api.openai.com/v1/chat/completions", {
-        //     method: "POST",
-        //     headers: {
-        //         "Content-Type":"application/json",
-        //         "Authorization":"Bearer "+ API_KEY
-        //     },
-        //     body: JSON.stringify(APIBody)
-        // }).then((data) => {
-        //     return data.json();
-        // }).then((data) => {
-        //     console.log(data);
-        //     setSummarizedText(data.choices[0].message.content);
-        // });
-        setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
+        await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+ API_KEY
+            },
+            body: JSON.stringify(APIBody)
+        }).then((data) => {
+            return data.json();
+        }).then((data) => {
+            console.log(data);
+            setSummarizedText(data.choices[0].message.content);
+        });
+        // setSummarizedText("I commented the calling open ai code to save free credit, line 101-113 in forms.js")
       }catch(e){
         console.log(e);
       }finally{
@@ -187,7 +190,54 @@ function VideoUpload() {
       const APIBody = {
           "model": "gpt-3.5-turbo",
           "messages": [
-              {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph." + text}
+              // {role: "user", content: "Generate a mind map with bullet point outline using the following paragraph.\n" + summarizedText}
+            {role: "user", content: "Generate a mind map with bullet point outline."}
+          ],
+          "temperature": 0,
+          "max_tokens": 1024,
+          "top_p":1.0,
+          "frequency_penalty":0.0,
+          "presence_penalty":0.0
+      }
+      
+      try{  
+        await fetch("https://api.openai.com/v1/chat/completions", {
+            method: "POST",
+            headers: {
+                "Content-Type":"application/json",
+                "Authorization":"Bearer "+ API_KEY
+            },
+            body: JSON.stringify(APIBody)
+        }).then((data) => {
+            return data.json();
+        }).then((data) => {
+            console.log(data);
+            setMindMapText(data.choices[0].message.content);
+        });
+        // setMindMapText("Hello\n- Jupiter\n  - Fifth planet from the Sun\n  - Largest planet in the Solar System\n  - Gas giant\n  - Mass is one-thousandth that of the Sun\n  - Mass is two-and-a-half times that of all other planets combined\n  - Brightest objects visible to the naked eye in the night sky\n  - Known to ancient civilizations since before recorded history\n  - Named after the Roman god Jupiter\n  - Can be bright enough to cast visible shadows when viewed from Earth\n  - On average, the third-brightest natural object in the night sky after the Moon and Venus")
+      }catch(e){
+        console.log(e);
+      }finally{
+        setLoadingMindMap(false);
+      }
+    }
+  }
+
+  async function callOpenAIAPIQnA(text){
+    setloadingQna(true);
+    console.log("call open ai api qna");
+    if(text == "")
+    {
+      console.log("empty text qna");
+    }
+    else
+    {
+      console.log("Calling the OpenAIAPI");
+
+      const APIBody = {
+          "model": "gpt-3.5-turbo",
+          "messages": [
+              {role: "user", content: "Generate potential Q&A in Q: A: format from the given information.\n" + summarizedText}
           ],
           "temperature": 0,
           "max_tokens": 1024,
@@ -218,7 +268,6 @@ function VideoUpload() {
       }
     }
   }
-
 
 
   return (
