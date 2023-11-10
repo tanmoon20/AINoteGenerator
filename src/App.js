@@ -10,7 +10,6 @@ import { MyProvider } from './layouts/UserContext';
 const App = () => {
   const routing = useRoutes(Themeroutes);
   
-  //return <div className="dark" >{routing}</div>;
   return (
     <MyProvider>
       {routing}
