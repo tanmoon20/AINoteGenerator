@@ -10,6 +10,7 @@ const Starter = lazy(() => import("../views/Starter.js"));
 const Login = lazy(() => import("../views/ui/Login"));
 const Validate = lazy(() => import("../views/ui/Validate"));
 const PremiumPlan = lazy(() => import("../views/ui/PremiumPlan.js"));
+const PremiumPlan = lazy(() => import("../views/ui/PremiumPlan.js"));
 
 /*****Routes******/
 
