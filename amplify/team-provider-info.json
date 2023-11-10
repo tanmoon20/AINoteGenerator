@@ -10,6 +10,17 @@
       "StackName": "amplify-ainotegenerator-dev-154202",
       "StackId": "arn:aws:cloudformation:us-east-1:183776258337:stack/amplify-ainotegenerator-dev-154202/d24793d0-76f7-11ee-8d5e-12b3ee0c391d",
       "AmplifyAppId": "d1pirh38kojfcj"
+    },
+    "categories": {
+      "auth": {
+        "ainotegeneratore293dd45": {}
+      },
+      "storage": {
+        "VideoUser": {}
+      },
+      "api": {
+        "ainotegenerator": {}
+      }
     }
   }
 }
