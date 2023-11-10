@@ -82,7 +82,7 @@ const Header = () => {
             </Link>
           </NavItem>
 
-          <NavItem>
+          {/* <NavItem>
             <Link to="/about" className="nav-link">
               <span style={{ fontSize: '20px' }}> About </span>
             </Link>
@@ -98,7 +98,7 @@ const Header = () => {
               <DropdownItem divider />
               <DropdownItem>Reset</DropdownItem>
             </DropdownMenu>
-          </UncontrolledDropdown>
+          </UncontrolledDropdown> */}
 
           <NavItem>
             <Link to="/premium" className="nav-link">
