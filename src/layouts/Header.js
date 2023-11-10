@@ -87,15 +87,7 @@ const Header = () => {
               <span style={{ fontSize: '20px' }}> About </span>
             </Link>
           </NavItem>
-
-          <NavItem>
-            <Link to="/premium" className="nav-link">
-              <Button className="btn" color="primary" size="sm">
-                  Upgrade to Premium
-              </Button>
-            </Link>
-          </NavItem>
-
+          
           <UncontrolledDropdown inNavbar nav>
             <DropdownToggle caret nav>
               <span style={{ fontSize: '20px' }}> DD Menu </span>
@@ -108,10 +100,18 @@ const Header = () => {
             </DropdownMenu>
           </UncontrolledDropdown>
 
+          <NavItem>
+            <Link to="/premium" className="nav-link">
+              <Button className="btn" color="primary" size="sm">
+                  Upgrade to Premium
+              </Button>
+            </Link>
+          </NavItem>
+
           {user === null && 
             <NavItem>
               <Link to="/login" className="nav-link">
-                <img src={userAvatar} alt="Blank Avatar" style={{ width: '35px', height: '35px' }} />
+                <img src={userAvatar} alt="Blank Avatar" className="rounded-circle" style={{ width: '35px', height: '35px' }} />
               </Link>
             </NavItem>
           }
