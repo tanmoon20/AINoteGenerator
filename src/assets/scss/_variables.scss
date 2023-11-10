@@ -12,6 +12,20 @@ $font-family-sans-serif: "Nunito", sans-serif;
   font-weight: bold;
 }
 
+.custom-list {
+  list-style-type: none;
+}
+
+.custom-list p::before {
+  content: "";
+  display: inline-block;
+  width: 20px; /* Adjust the width as needed */
+  height: 20px; /* Adjust the height as needed */
+  background: url('../images/logos/accept.png') no-repeat; /* Replace 'path/to/tickIcon.png' with the actual path to your tick icon */
+  background-size: contain;
+  margin-right: 7px;
+}
+
 /*******************/
 // Theme Colors
 /********************/
@@ -65,7 +79,7 @@ body{
   background-size: cover;
   min-height: 100vh;
 }
-$body-color: $dark !default;
+$body-color: $gray-900 !default;
 
 /*******************/
 // Theme common variable
@@ -94,3 +108,4 @@ $btn-focus-width: 0px;
 /********************/
 $sidebarWidth: 260px;
 $sidebarColor: $white;
+
