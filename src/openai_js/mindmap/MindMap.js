@@ -15,9 +15,7 @@ import ReactFlow, {
 } from 'reactflow';
  
 import 'reactflow/dist/style.css';
-
-const initialNodes = [];
-const initialEdges = [];
+import { initialNodes, initialEdges} from "./NodesEdges";
 
 //elkjs tree
 const ELK = require('elkjs')
@@ -153,7 +151,6 @@ function AddEdges(tempId, tempSource, tempTarget ){
 
 const MindMap = (fileText) => {
 
-  console.log("mindmap")
   // console.log(fileText.fileText)
   function GenerateMindMap(){
     //store the node color of each hierarchy
@@ -164,6 +161,7 @@ const MindMap = (fileText) => {
     let bulletPos; 
     let text;
 
+    console.log("mindmap")
     console.log("nodeColor: ", nodeColor.at(0));
 
     const wordList = input.split("\n");

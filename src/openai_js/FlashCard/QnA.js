@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
 import { Card, CardBody } from 'reactstrap';
+import { flashcardData } from './QuestionAnswer';
 
 function FlashCardList({flashcards}){
   return(
@@ -38,10 +39,12 @@ function FlashCardSingle({flashcard}){
 }
 
 const FlashCard = (fileText) => {
-  const flashcardData = []
+  
 
   function GenerateFlashCard(){
+    console.log("qna")
     const input = fileText.fileText
+    console.log(input)
     let q;
     let ans;
     let APos;
