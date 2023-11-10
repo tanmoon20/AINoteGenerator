@@ -7,7 +7,7 @@ import MindMap from './mindmap/MindMap';
 import FlashCard from './FlashCard/QnA';
 
 AWS.config.update({ region: 'us-east-1' });
-const API_KEY = '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'; //secure -> env variable
+const API_KEY = process.env.REACT_APP_API_KEY; //secure -> env variable
 
 function VideoUpload() {
   const [selectedFile, setSelectedFile] = useState(null);
@@ -45,9 +45,9 @@ function VideoUpload() {
 
 
     AWS.config.update({
-      region: 'us-east-1', // Replace with your desired region
-      accessKeyId: 'AKIASVSPLFEQ4QUUEV4X', // Add your access key ID here
-      secretAccessKey:  'pX03Z3399rsbU9QzUaBVuadSimqDz0lQhLFnfqej'// Add your secret access key here
+      region: process.env.REACT_APP_region, // Replace with your desired region
+      accessKeyId: process.env.REACT_APP_accessKeyId, // Add your access key ID here
+      secretAccessKey:  process.env.REACT_APP_secretAccessKey// Add your secret access key here
     });
 
     // Replace 'your-s3-bucket-name' and 'your-s3-key' with the actual bucket name and key
